@@ -205,20 +205,19 @@ let popupFunc = function() {
                 if (i > 0) {
                     if (popupOption.dimmed) optionEvent.createdDimmed();
                     
-                    layerPopup.classList.add(popupOption.openClassName);
-                        layerPopup.setAttribute('data-popup-depth', popupDepth);
+                    autoPopup.classList.add(popupOption.openClassName);
+                    autoPopup.setAttribute('data-popup-depth', popupDepth);
     
                         if (popupOption.dimmedClickClose) optionEvent.popupDimmedClose(layerPopup);
                         if (popupOption.scrollLock) optionEvent.scrollLock();
     
                         // 팝업 open 시 팝업 타이틀로 포커스 이동
-                        let popupTitle = layerPopup.querySelector(`.${popupOption.titleClassName}`);
+                        let popupTitle = autoPopup.querySelector(`.${popupOption.titleClassName}`);
                         popupTitle.focus();
                         popupTitle.addEventListener('keydown', function (e) {
                             if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') e.preventDefault();
                         });
                 }
-                autoPopup.classList.add()
                 
 
                 // 팝업 위 팝업이 뜰 경우 이전 팝업 opacity (dimmed 옵션 true 일 경우 동작, default : true)
