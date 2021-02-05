@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="../../assets/css/main.css">
 </head>
 <body>
+    <!-- 
+        /**
+            - 팝업 호출 하는 버튼 기본 : <button aria-haspopup="dialog" data-popup="팝업고유ID">팝업</button>.
+            - 팝업 호출 하는 버튼에 aria-haspopup="dialog" 값이 들어가야 focus 저장이 됨.
+            - 팝업 호출 하는 버튼의 data-popup="팝업고유ID" 값과 동일하게 팝업 창 wrapper 에 data-popup="팝업고유ID" 넣어줘야 함.
+            - 팝업 타이틀은 반드시 있어야 하며, 디자인 상 타이틀이 없을 때는 숨김으로 추가 해 줄 것.
+            - 팝업 타이틀에 tabindex="0" 추가 필요.
+            - 팝업 닫기 버튼에는 data-popup-close="팝업고유ID" 추가.
+            - 팝업이 한번에 여러개 활성화 되었다가 한번에 닫아야 할 경우 data-popup-close-all="true" 추가.
+            - 팝업 한번에 닫을 경우 data-popup-close="팝업고유ID" 값과 data-popup-close-all="true" 두 개 모두 필요함.
+            - 팝업 닫기 버튼은 항상 팝업 마크업 제일 마지막에 위치하며 공통 클래스가 필요함. (btn-layer-close)
+            - 팝업 닫기 버튼이 한 개 이상일 경우, 마크업 제일 마지막에 위치한 팝업 닫기 버튼에만 공용 클래스를 적용함.
+        */
+    -->
     <div class="wrapper">
         <button aria-haspopup="dialog" data-popup="popup1">팝업</button>
         <div>
@@ -90,6 +104,22 @@
                 <button>확인</button>
             </div>
             <button data-popup-close="popup3" class="btn-layer-close" data-popup-close-all="true">닫기</button>
+        </div>
+    </section>
+    <section class="wrap-layer-popup" data-popup="popupStart" data-popup-auto="true">
+        <div class="inner-layer-popup">
+            <div class="wrap-layer-popup-title" tabindex="0">
+                <h1>타이틀3333</h1>
+            </div>
+            <div class="layer-popup-contents">
+                <div class="inner">
+                    내용3333
+                </div>
+            </div>
+            <div class="layer-popup-bottom">
+                <button>확인</button>
+            </div>
+            <button data-popup-close="popupStart" class="btn-layer-close">닫기</button>
         </div>
     </section>
     <script src="../../assets/js/popup_script.js"></script>
