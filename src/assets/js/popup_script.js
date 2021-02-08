@@ -30,7 +30,7 @@ let popupFunc = function() {
         createdDimmed: () => {
             const popupDimmed = document.querySelectorAll(`.${popupOption.dimmedClassName}`);
             if (popupDimmed.length === 0) {
-                const createDiv = document.createElement("div");
+                const createDiv = document.createElement('div');
                 createDiv.classList.add(popupOption.dimmedClassName);
                 document.querySelector('body').appendChild(createDiv);
             };
@@ -45,19 +45,18 @@ let popupFunc = function() {
                         clickEvent.popupCloseAll();
                         optionEvent.dimmedStyleDeleteAll();
                         optionEvent.scrollLockRemove();
-                        clickEvent.popupDataReset();
+                        clickEvent.popupDataReset(); 
                     };
-                } else {
-                    // 저장된 focusElement 값이 없을 경우 (화면 시작 시 오픈 되는 팝업 등 케이스)
-                    if (popupDimmed.length > 0) {
-                        event.preventDefault();
-                        optionEvent.dimmedStyleDeleteAll();
-                        optionEvent.scrollLockRemove();
-                        clickEvent.popupDataReset();
-                        for (let i = 0; layerPopups.length > i; i++) layerPopups[i].classList.remove(popupOption.openClassName);
-                        document.body.setAttribute('tabindex', '0');
-                        document.body.focus();
-                    }
+                };
+                // 저장된 focusElement 값이 없을 경우 (화면 시작 시 오픈 되는 팝업 등 케이스)
+                if (element.getAttribute('data-popup-auto') === 'true' && popupDimmed.length > 0) {
+                    event.preventDefault();
+                    optionEvent.dimmedStyleDeleteAll();
+                    optionEvent.scrollLockRemove();
+                    clickEvent.popupDataReset();
+                    for (let i = 0; layerPopups.length > i; i++) layerPopups[i].classList.remove(popupOption.openClassName);
+                    document.body.setAttribute('tabindex', '0');
+                    document.body.focus();
                 };
             });
         },
@@ -68,7 +67,8 @@ let popupFunc = function() {
         // 상위 팝업 닫기 시 아래 opacity style 삭제 (dimmed 옵션 true 일 경우 동작, default : true)
         popupStyleDelete: (target) => {
             const targetPopupDepth = Number(target.getAttribute('data-popup-depth'));
-            layerPopups[targetPopupDepth].classList.remove(popupOption.dimmedPrevClassName);
+            console.log(targetPopupDepth);
+            document.querySelector(`[data-popup-depth='${targetPopupDepth - 1}']`).classList.remove(popupOption.dimmedPrevClassName);
         },
         // 팝업 dimmed, 팝업 opacity style 삭제 (dimmed 옵션 true 일 경우 동작, default : true)
         dimmedStyleDeleteAll: () => {
@@ -97,7 +97,7 @@ let popupFunc = function() {
             // 팝업 포커스 Element 저장
             popupDepth += 1;
             focusElement.splice((popupDepth - 1), 0, e.currentTarget);
-            
+            let keydown;
             layerPopups.forEach((layerPopup) => {
                 if (layerPopup.getAttribute('data-popup') === e.currentTarget.getAttribute('data-popup')) {
                     
@@ -113,11 +113,21 @@ let popupFunc = function() {
                     popupTitle.addEventListener('keydown', function (e) {
                         if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') e.preventDefault();
                     });
+                    console.log('1');
+                    // if (!keydown) {
+                        layerPopup.addEventListener('keydown', function (e) {
+                            clickEvent.escKeyClose(layerPopup, e);
+                            this.removeEventListener("keydown",arguments.callee);
+                        });
+                    // }
                 };
             });
 
             // 팝업 위 팝업이 뜰 경우 이전 팝업 opacity (dimmed 옵션 true 일 경우 동작, default : true)
-            if (popupOption.dimmed && popupDepth > 1) layerPopups[popupDepth - 2].classList.add(popupOption.dimmedPrevClassName);
+            if (popupOption.dimmed && popupDepth > 1) {
+                document.querySelector(`[data-popup-depth='${popupDepth - 1}']`).classList.add(popupOption.dimmedPrevClassName);
+            }
+
         },
         // 팝업 닫기
         popupClose: (e) => {
@@ -137,13 +147,16 @@ let popupFunc = function() {
                         };
                     };
 
-                    layerPopup.classList.remove(popupOption.openClassName);
+                    layerPopup.classList.remove(popupOption.openClassName);                    
+
                     if (focusElement.length > 0) {
                         focusElement[popupDepth - 1].focus();
                         focusElement.splice((popupDepth - 1), 1);
                         popupDepth -= 1;
-                    } else {
-                        // 저장된 focusElement 값이 없을 경우 (화면 시작 시 오픈 되는 팝업 등 케이스)
+                    };
+
+                    // 저장된 focusElement 값이 없을 경우 (화면 시작 시 오픈 되는 팝업 등 케이스)
+                    if (layerPopup.getAttribute('data-popup-auto') === 'true') {
                         const $thisPopupDepth = layerPopup.getAttribute('data-popup-depth');
                         if ($thisPopupDepth > 1) {
                             const prevPopupElement = document.querySelector(`[data-popup-depth='${$thisPopupDepth - 1}']`);
@@ -153,6 +166,10 @@ let popupFunc = function() {
                             document.body.focus();
                         };
                     };
+                    
+                    layerPopup.removeEventListener('keydown', function (e) {
+                        return clickEvent.escKeyClose(layerPopup, e);
+                    });
                 };
             });
             // 열린 팝업이 없을 때
@@ -166,6 +183,45 @@ let popupFunc = function() {
             } else if (openPopups.length > 0) {
                 if (popupOption.dimmed) optionEvent.popupStyleDelete(e.currentTarget);
             };
+        },
+        // ESC 키로 팝업 닫기
+        escKeyClose: (element, e) => {
+            // layerPopups.forEach((layerPopup) => {
+            // const popupDimmed = document.querySelectorAll(`.${popupOption.dimmedClassName}`);
+            // if (popupDimmed.length > 0) {
+                if (e.key == 'Escape') {
+                    console.log('2')
+                    element.classList.remove(popupOption.openClassName);
+                    if (focusElement.length > 0) {
+                        focusElement[popupDepth - 1].focus();
+                        focusElement.splice((popupDepth - 1), 1);
+                        popupDepth -= 1;
+                    } 
+                    // 저장된 focusElement 값이 없을 경우 (화면 시작 시 오픈 되는 팝업 등 케이스)
+                    if (element.getAttribute('data-popup-auto') === 'true') {
+                        const $thisPopupDepth = layerPopup.getAttribute('data-popup-depth');
+                        if ($thisPopupDepth > 1) {
+                            const prevPopupElement = document.querySelector(`[data-popup-depth='${$thisPopupDepth - 1}']`);
+                            prevPopupElement.querySelector(`.${popupOption.titleClassName}`).focus();
+                        } else {
+                            document.body.setAttribute('tabindex', '0');
+                            document.body.focus();
+                        };
+                    };
+                    // 열린 팝업이 없을 때
+                    const openPopups = document.querySelectorAll(`.${popupOption.openClassName}`);
+                    if (openPopups.length === 0) {
+                        if (popupOption.dimmed) optionEvent.dimmedStyleDeleteAll();
+                        if (popupOption.scrollLock) optionEvent.scrollLockRemove();
+                        // 팝업 포커스 관련 data reset
+                        clickEvent.popupDataReset();
+                    // 열린 팝업이 있을 때
+                    } else if (openPopups.length > 0) {
+                        if (popupOption.dimmed) return optionEvent.popupStyleDelete(element);
+                    };
+                }
+            // });
+            // };
         },
         // 팝업 close 버튼 키보드 접근 시 (tab 키, 화살표 -> 버튼) 
         closeBtnKeydown: (e) => {
@@ -186,6 +242,7 @@ let popupFunc = function() {
         // 모든 팝업 닫기
         popupCloseAll: () => {
             for (let i = 0; layerPopups.length > i; i++) layerPopups[i].classList.remove(popupOption.openClassName);
+            console.log(focusElement);
             focusElement[0].focus();
         },
     };
@@ -216,22 +273,12 @@ let popupFunc = function() {
             todayDate.setDate(todayDate.getDate() + expiredays);
             document.cookie = name + '=' + escape(value) + '; path=/; expires=' + todayDate.toGMTString() + ';'
         },
-        getCookie: () => {
-            cookieData = document.cookie;
-            if (cookieData != '') {
-                let cookieArray = cookieData.split('; ');
-                cookieArray.forEach((cookie) => {
-                    let cookieName = cookie.split("=");
-                    if (cookieName[1] === "Y") cookieCheckValue.push(cookieName[0]);
-                });
-            };
-        },
     };
 
     // 화면 시작 시 오픈 되는 팝업
     let startPopup = {
         init : () => {
-            closeOption.getCookie();
+            startPopup.getCookie();
             autoPopups.forEach((autoPopup) => {
                 // 쿠기 저장 된 값으로 오늘 하루 OR 일주일 열지 않는 팝업 제외
                 if(cookieCheckValue.length > 0) {
@@ -243,6 +290,9 @@ let popupFunc = function() {
                 } else {
                     startPopup.openStartPopup(autoPopup);
                 };
+                autoPopup.addEventListener('keydown', function (e) {
+                    if (e.key == 'Escape') clickEvent.escKeyClose(autoPopup);
+                });
             });
         },
         openStartPopup: (autoPopup) => {
@@ -264,7 +314,18 @@ let popupFunc = function() {
             
             // 팝업 위 팝업이 뜰 경우 이전 팝업 opacity (dimmed 옵션 true 일 경우 동작, default : true)
             if (popupOption.dimmed && popupDepth > 1) autoPopups[popupDepth - 2].classList.add(popupOption.dimmedPrevClassName);
-        }
+        },
+        // 쿠키 값 확인
+        getCookie: () => {
+            cookieData = document.cookie;
+            if (cookieData != '') {
+                let cookieArray = cookieData.split('; ');
+                cookieArray.forEach((cookie) => {
+                    let cookieName = cookie.split("=");
+                    if (cookieName[1] === "Y") cookieCheckValue.push(cookieName[0]);
+                });
+            };
+        },
     };
 
     let obj = {
