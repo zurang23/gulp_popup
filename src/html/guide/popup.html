@@ -19,6 +19,10 @@
             - 팝업 한번에 닫을 경우 data-popup-close="팝업고유ID" 값과 data-popup-close-all="true" 두 개 모두 필요함.
             - 팝업 닫기 버튼은 항상 팝업 마크업 제일 마지막에 위치하며 공통 클래스가 필요함. (btn-layer-close)
             - 팝업 닫기 버튼이 한 개 이상일 경우, 마크업 제일 마지막에 위치한 팝업 닫기 버튼에만 공용 클래스를 적용함.
+            
+            - 화면 시작 시 자동으로 뜨는 팝업일 경우 data-popup-auto="true" 값 추가 후 페이지 에서 popupFunc.startOption() 실행.
+            - 오늘 하루 or 일주일 열지 않기 팝업 시 checkbox 에 data-check-open="기간" 추가.
+            - data-check-open="기간" 에서 기간은 today, week 으로 구분. 팝업 닫기 시 해당 값으로 쿠키 저장 후 화면 시작 시 자동으로 뜨는 팝업에서 해당 값 확인 후 제외시킴.
         */
     -->
     <div class="wrapper">
@@ -50,7 +54,7 @@
             내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
         </div>
     </div>
-    <section class="wrap-layer-popup" data-popup="popup1">
+    <section class="wrap-layer-popup" data-popup="popup1" data-popup-auto="true">
         <div class="inner-layer-popup">
             <div class="wrap-layer-popup-title" tabindex="0">
                 <h1>타이틀</h1>
@@ -117,7 +121,12 @@
                 </div>
             </div>
             <div class="layer-popup-bottom">
-                <button>확인</button>
+                <span>
+                    <input type="checkbox" class="input-check" id="input-check01" data-check-open="today">
+                    <label for="input-check01" class="input-check-label">
+                        <span>오늘 하루 열지 않기</span>
+                    </label>
+                </span>
             </div>
             <button data-popup-close="popupStart" class="btn-layer-close">닫기</button>
         </div>
