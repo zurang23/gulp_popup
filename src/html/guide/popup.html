@@ -20,9 +20,10 @@
             - 팝업 닫기 버튼은 항상 팝업 마크업 제일 마지막에 위치하며 공통 클래스가 필요함. (btn-layer-close)
             - 팝업 닫기 버튼이 한 개 이상일 경우, 마크업 제일 마지막에 위치한 팝업 닫기 버튼에만 공용 클래스를 적용함.
 
-            - 화면 시작 시 자동으로 뜨는 팝업일 경우 data-popup-auto="true" 값 추가 후 페이지 에서 popupFunc.startOption() 실행.
+            - 화면 시작 시 자동으로 뜨는 팝업일 경우 data-popup-auto="true" 값 추가 후 페이지 에서 popupCommon.getCookie() / popupCommon.startOption() 두 함수 실행.
             - 오늘 하루 or 일주일 열지 않기 팝업 시 checkbox 에 data-check-open="기간" 추가.
             - data-check-open="기간" 에서 기간은 today, week 으로 구분. 팝업 닫기 시 해당 값으로 쿠키 저장 후 화면 시작 시 자동으로 뜨는 팝업에서 해당 값 확인 후 제외시킴.
+            - data-check-open="기간" 으로 사용하지 않고 페이지 내에서 직접 쿠키 저장으로 사용 시 popupCommon.setCookie(data-popup 값, 'Y', 기간) 으로 사용. 
         */
     -->
     <div class="wrapper">
@@ -72,13 +73,14 @@
                 </div>
             </div>
             <div class="layer-popup-bottom">
-                <button aria-haspopup="dialog" data-popup="popup2">2차 팝업</button>
+                <button aria-haspopup="dialog" data-popup="popup2"><span>2차 팝업</span></button>
                 <button data-popup-close="popup1" data-popup-close-all="true">모두 닫기</button>
             </div>
             <button class="btn-layer-close" data-popup-close="popup1">닫기</button>
         </div>
     </section>
-    <section class="wrap-layer-popup" data-popup="popupStart12" data-popup-auto="true" role="dialog">
+    <section class="wrap-layer-popup" data-popup="popupStart12" role="dialog">
+    <!-- <section class="wrap-layer-popup" data-popup="popupStart12" data-popup-auto="true" role="dialog"> -->
         <div class="inner-layer-popup">
             <div class="wrap-layer-popup-title" tabindex="0">
                 <h1>시작팝업 2</h1>
@@ -128,12 +130,13 @@
                 </div>
             </div>
             <div class="layer-popup-bottom">
-                <button>확인</button>
+                <button data-popup-close="popup3"><span>현재팝업만 닫기</span></button>
             </div>
             <button data-popup-close="popup3" class="btn-layer-close" data-popup-close-all="true">닫기</button>
         </div>
     </section>
-    <section class="wrap-layer-popup" data-popup="popupStart" data-popup-auto="true" role="dialog">
+    <section class="wrap-layer-popup" data-popup="popupStart" role="dialog">
+    <!-- <section class="wrap-layer-popup" data-popup="popupStart" data-popup-auto="true" role="dialog"> -->
         <div class="inner-layer-popup">
             <div class="wrap-layer-popup-title" tabindex="0">
                 <h1>타이틀3333</h1>
