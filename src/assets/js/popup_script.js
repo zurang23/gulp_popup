@@ -26,7 +26,6 @@ const keyEvent = {
     set keyEscape(state) {
         this._state = state;
         if (state) popupCommon.escKeyClose(KeyboardEventElement, keyEscapeEvent);
-        console.log(state, keyEscapeEvent, KeyboardEventElement, '결과');
     },
 };
 
@@ -92,6 +91,7 @@ let popupCommon = function() {
             popupDimmedTarget.addEventListener('transitionend', function() {
                 popupDimmedTarget.remove();
             });
+            keyEvent.keyEscape = false;
         },
         // 팝업 open 시 body scroll Lock
         scrollLock: () => {
@@ -208,9 +208,12 @@ let popupCommon = function() {
         },
         // ESC 키로 팝업 닫기
         escKeyClose: (element, e) => {
-            clickEvent.singleCloseCommonEvent(element, 'esc');
-            clickEvent.openedPopupCheck(e, 'escKey');
-            keyEvent.keyEscape = false;
+            const openPopups = document.querySelectorAll(`.${popupOption.openClassName}`);
+            if (openPopups.length > 0) {
+                clickEvent.singleCloseCommonEvent(element, 'esc');
+                clickEvent.openedPopupCheck(e, 'escKey');
+                // keyEvent.keyEscape = false;
+            }
         },
         // 팝업 close 버튼에서  tab 키 또는 화살표 -> 키 키보드 동작 시 팝업 타이틀로 포커스 이동 (팝업 밖으로 포커스 이동 방지)
         closeBtnKeydown: (e) => {
