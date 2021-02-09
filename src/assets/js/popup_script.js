@@ -26,6 +26,7 @@ const keyEvent = {
     set keyEscape(state) {
         this._state = state;
         if (state) popupCommon.escKeyClose(KeyboardEventElement, keyEscapeEvent);
+        console.log(state, KeyboardEventElement, keyEscapeEvent);
     },
 };
 
@@ -142,7 +143,6 @@ let popupCommon = function() {
                 if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') e.preventDefault();
             });
             KeyboardEventElement = popupElement;
-            // if (keyEvent.keyEscape) clickEvent.escKeyClose(popupElement, keyEscapeEvent);
         },
         // 클릭으로 팝업 닫기
         popupClose: (e) => {
@@ -164,8 +164,7 @@ let popupCommon = function() {
             clickEvent.openedPopupCheck(e, 'button'); // openedPopupCheck (현재 열려 있는 팝업 확인) 이벤트 호출
         },
         // 단일 팝업 닫기 공통 이벤트
-        singleCloseCommonEvent: (popupElement) => {
-            const $thisPopupDepth = popupElement.getAttribute('data-popup-depth');
+        singleCloseCommonEvent: (popupElement, trigger) => {
             popupElement.classList.remove(popupOption.openClassName); // 팝업 활성화 class 삭제
             
             // 클릭으로 팝업 활성화 했을 경우 포커스 이동 (저장된 focusElement 값이 있을 경우)
@@ -173,14 +172,16 @@ let popupCommon = function() {
                 focusElement[popupDepth - 1].focus();
                 focusElement.splice((popupDepth - 1), 1);
                 popupDepth -= 1;
-                KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${$thisPopupDepth - 1}']`);
+                KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${popupDepth}']`);
             };
-
+            
             // 화면 시작 시 오픈 되는 팝업 등 케이스 (저장된 focusElement 값이 없을 경우)
             if (popupElement.getAttribute('data-popup-auto') === 'true') {
+                const $thisPopupDepth = popupElement.getAttribute('data-popup-depth');
                 if ($thisPopupDepth > 1) {
                     const prevPopupElement = document.querySelector(`[data-popup-depth='${$thisPopupDepth - 1}']`);
                     prevPopupElement.querySelector(`.${popupOption.titleClassName}`).focus();
+                    KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${$thisPopupDepth - 1}']`);
                 } else {
                     document.body.setAttribute('tabindex', '0');
                     document.body.focus();
@@ -210,9 +211,8 @@ let popupCommon = function() {
         escKeyClose: (element, e) => {
             const openPopups = document.querySelectorAll(`.${popupOption.openClassName}`);
             if (openPopups.length > 0) {
-                clickEvent.singleCloseCommonEvent(element, 'esc');
+                clickEvent.singleCloseCommonEvent(element, 'escKey');
                 clickEvent.openedPopupCheck(e, 'escKey');
-                // keyEvent.keyEscape = false;
             }
         },
         // 팝업 close 버튼에서  tab 키 또는 화살표 -> 키 키보드 동작 시 팝업 타이틀로 포커스 이동 (팝업 밖으로 포커스 이동 방지)
