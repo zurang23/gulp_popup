@@ -12,6 +12,8 @@ const popupOption = {
     closeBtnClassName: 'btn-layer-close', // 팝업 닫기 버튼 class name (팝업 마크업 마지막에 들어가는 닫기 버튼)
 };
 
+console.log('asdfg');
+
 // 전역 변수
 let focusElement = [];
 let cookieCheckValue = [];
@@ -28,6 +30,11 @@ const keyEvent = {
         if (state) popupCommon.escKeyClose(KeyboardEventElement, keyEscapeEvent);
         console.log(state, KeyboardEventElement, keyEscapeEvent);
     },
+};
+
+// IE 대응 forEach 변환
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
 };
 
 let popupCommon = function() {
@@ -90,9 +97,11 @@ let popupCommon = function() {
             };
             popupDimmedTarget.style.opacity = 0;
             popupDimmedTarget.addEventListener('transitionend', function() {
-                popupDimmedTarget.remove();
+                // popupDimmedTarget.remove();
+                popupDimmedTarget.parentNode.removeChild(popupDimmedTarget);
             });
             keyEvent.keyEscape = false;
+            // console.log();
         },
         // 팝업 open 시 body scroll Lock
         scrollLock: () => {
@@ -259,7 +268,7 @@ let popupCommon = function() {
             // ESC 키로 팝업 닫기
             // 팝업 내 열린 상태에서 키보드 ESC 키 이벤트 실행 
             window.addEventListener('keydown', function (e) {
-                if (e.key == 'Escape') {
+                if (e.key == 'Escape' || e.key == 'Esc') {
                     keyEscapeEvent = e;
                     keyEvent.keyEscape = true;
                 };
