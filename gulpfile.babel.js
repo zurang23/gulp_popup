@@ -160,6 +160,12 @@ gulp.task('script', async () => {
         gulp.src([PATH.SCRIPT.TARGET, '!' + PATH.SCRIPT.SRC + '/**/libs/*.js', '!' + PATH.SCRIPT.SRC + '/**/*.min.js'], {sourcemaps: true})
             .pipe($.plumber({errorHandler: onError}))
             .pipe($.newer(PATH.SCRIPT.BUILD))
+            // .pipe($.babel({presets: ['@babel/preset-env']}))
+            .pipe($.jsbeautifier()),
+
+        gulp.src([PATH.SCRIPT.SRC + '**/*.js', '!' + PATH.SCRIPT.SRC + '/**/libs/*.js', '!' + PATH.SCRIPT.SRC + '/**/*.min.js'], {sourcemaps: true})
+            .pipe($.plumber({errorHandler: onError}))
+            .pipe($.newer(PATH.SCRIPT.BUILD))
             .pipe($.babel({presets: ['@babel/preset-env']}))
             .pipe($.jsbeautifier()),
 

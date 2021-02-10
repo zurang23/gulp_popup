@@ -12,8 +12,6 @@ const popupOption = {
     closeBtnClassName: 'btn-layer-close', // 팝업 닫기 버튼 class name (팝업 마크업 마지막에 들어가는 닫기 버튼)
 };
 
-console.log('asdfg');
-
 // 전역 변수
 let focusElement = [];
 let cookieCheckValue = [];
