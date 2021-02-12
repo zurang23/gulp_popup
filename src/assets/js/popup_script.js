@@ -10,13 +10,21 @@ const popupOption = {
     openClassName: 'popup-open', // 팝업 활성화 시 추가 되는 class name
     titleClassName: 'wrap-layer-popup-title', // 팝업 활성화 시 포커스 될 타이틀 class name
     closeBtnClassName: 'btn-layer-close', // 팝업 닫기 버튼 class name (팝업 마크업 마지막에 들어가는 닫기 버튼)
-};
+}; 
 
-// 전역 변수
-let focusElement = [];
-let cookieCheckValue = [];
-let popupDepth = 0;
-let cookieData, layerPopups, btnLayerPopup, btnLayerClose, autoPopups, keyEscapeEvent, KeyboardEventElement;
+// 팝업에 사용되는 전역 변수
+let _popupVariable = {};
+
+_popupVariable.focusElement = [];
+_popupVariable.cookieCheckValue = [];
+_popupVariable.popupDepth = 0;
+_popupVariable.cookieData;
+_popupVariable.layerPopups;
+_popupVariable.btnLayerPopup;
+_popupVariable.btnLayerClose;
+_popupVariable.autoPopups;
+_popupVariable.keyEscapeEvent;
+_popupVariable.KeyboardEventElement;
 
 // 키보드 ESC 키 동작 시 keyEvent.keyEscape 변수 값 변경 (변수 변경 감지 중 - 변수 값에 따라 popupCommon.escKeyClose 이벤트 호출)
 const keyEvent = {
@@ -25,8 +33,8 @@ const keyEvent = {
     },
     set keyEscape(state) {
         this._state = state;
-        if (state) popupCommon.escKeyClose(KeyboardEventElement, keyEscapeEvent);
-        console.log(state, KeyboardEventElement, keyEscapeEvent);
+        if (state) popupCommon.escKeyClose(_popupVariable.KeyboardEventElement, _popupVariable.keyEscapeEvent);
+        console.log(state, _popupVariable.KeyboardEventElement, _popupVariable.keyEscapeEvent);
     },
 };
 
@@ -39,9 +47,9 @@ let popupCommon = function() {
     let init = {
         // 전역 변수 값 설정
         globalVariable: () => {
-            layerPopups = document.querySelectorAll(`.${popupOption.wrapperClassName}`);
-            btnLayerPopup = document.querySelectorAll('[aria-haspopup="dialog"]');
-            btnLayerClose = document.querySelectorAll('[data-popup-close]');
+            _popupVariable.layerPopups = document.querySelectorAll(`.${popupOption.wrapperClassName}`);
+            _popupVariable.btnLayerPopup = document.querySelectorAll('[aria-haspopup="dialog"]');
+            _popupVariable.btnLayerClose = document.querySelectorAll('[data-popup-close]');
         },
     };
     // option Event
@@ -61,11 +69,11 @@ let popupCommon = function() {
             optionEvent.dimmedeDelete(); // 팝업 dimmed 삭제 이벤트 호출
             optionEvent.scrollLockRemove(); // 스크롤 락 해지 이벤트 호출
             // 팝업 전체 닫기 이벤트 호출 기본 
-            // (저장 된 focusElement 값이 있는 경우)
-            if (focusElement.length > 0) clickEvent.popupCloseAll();
-            // (저장된 focusElement 값이 없을 경우 - 화면 시작 시 오픈 되는 팝업 등 케이스)
+            // (저장 된 _popupVariable.focusElement 값이 있는 경우)
+            if (_popupVariable.focusElement.length > 0) clickEvent.popupCloseAll();
+            // (저장된 _popupVariable.focusElement 값이 없을 경우 - 화면 시작 시 오픈 되는 팝업 등 케이스)
             else {
-                for (let i = 0; layerPopups.length > i; i++) layerPopups[i].classList.remove(popupOption.openClassName);
+                for (let i = 0; _popupVariable.layerPopups.length > i; i++) _popupVariable.layerPopups[i].classList.remove(popupOption.openClassName);
                 document.body.setAttribute('tabindex', '0');
                 document.body.focus();
             };
@@ -89,9 +97,9 @@ let popupCommon = function() {
         // 팝업 dimmed 삭제
         dimmedeDelete: () => {
             const popupDimmedTarget = document.querySelector(`.${popupOption.dimmedClassName}`);
-            for (let i = 0; layerPopups.length > i; i++) {
-                layerPopups[i].classList.remove(popupOption.dimmedPrevClassName);
-                layerPopups[i].removeAttribute('data-popup-depth');
+            for (let i = 0; _popupVariable.layerPopups.length > i; i++) {
+                _popupVariable.layerPopups[i].classList.remove(popupOption.dimmedPrevClassName);
+                _popupVariable.layerPopups[i].removeAttribute('data-popup-depth');
             };
             popupDimmedTarget.style.opacity = 0;
             popupDimmedTarget.addEventListener('transitionend', function() {
@@ -118,24 +126,24 @@ let popupCommon = function() {
             e.preventDefault();
             if (popupOption.dimmed) optionEvent.createdDimmed(); // 팝업 dimmed 생성 (dimmed 옵션 true 일 경우 동작, default : true)
             
-            layerPopups.forEach((layerPopup) => {
+            _popupVariable.layerPopups.forEach((layerPopup) => {
                 if (layerPopup.getAttribute('data-popup') === e.currentTarget.getAttribute('data-popup')) {
-                    popupDepth += 1; // 팝업 depth 저장
-                    focusElement.splice((popupDepth - 1), 0, e.currentTarget); // 팝업 포커스 Element 저장
+                    _popupVariable.popupDepth += 1; // 팝업 depth 저장
+                    _popupVariable.focusElement.splice((_popupVariable.popupDepth - 1), 0, e.currentTarget); // 팝업 포커스 Element 저장
                     clickEvent.openCommonEvent(layerPopup); // 팝업 오픈 공통 이벤트 호출
                 };
             });
 
             // 팝업 위 팝업이 뜰 경우 이전 팝업 opacity (dimmed 옵션 true 일 경우 동작, default : true)
-            if (popupOption.dimmed && popupDepth > 1) {
-                document.querySelector(`[data-popup-depth='${popupDepth - 1}']`).classList.add(popupOption.dimmedPrevClassName);
+            if (popupOption.dimmed && _popupVariable.popupDepth > 1) {
+                document.querySelector(`[data-popup-depth='${_popupVariable.popupDepth - 1}']`).classList.add(popupOption.dimmedPrevClassName);
             };
 
         },
         // 팝업 오픈 공통 이벤트
         openCommonEvent: (popupElement) => {
             popupElement.classList.add(popupOption.openClassName); // 팝업 활성화 class 추가
-            popupElement.setAttribute('data-popup-depth', popupDepth); // 활성화 된 팝업 depth 값 추가
+            popupElement.setAttribute('data-popup-depth', _popupVariable.popupDepth); // 활성화 된 팝업 depth 값 추가
 
             // 팝업 dimmed 클릭 시 팝업 닫기 이벤트 호출 (dimmed 옵션 && dimmedClickClose 옵션 둘 다 true 일 경우 동작, default : true)
             if (popupOption.dimmed && popupOption.dimmedClickClose) optionEvent.popupDimmedClickAction(popupElement);
@@ -149,11 +157,11 @@ let popupCommon = function() {
             popupTitle.addEventListener('keydown', function (e) {
                 if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') e.preventDefault();
             });
-            KeyboardEventElement = popupElement;
+            _popupVariable.KeyboardEventElement = popupElement;
         },
         // 클릭으로 팝업 닫기
         popupClose: (e) => {
-            layerPopups.forEach((layerPopup) => {
+            _popupVariable.layerPopups.forEach((layerPopup) => {
                 // 팝업 전체 닫기
                 if (e.currentTarget.getAttribute('data-popup-close-all') === 'true') {
                     clickEvent.popupCloseAll();
@@ -174,21 +182,21 @@ let popupCommon = function() {
         singleCloseCommonEvent: (popupElement, trigger) => {
             popupElement.classList.remove(popupOption.openClassName); // 팝업 활성화 class 삭제
             
-            // 클릭으로 팝업 활성화 했을 경우 포커스 이동 (저장된 focusElement 값이 있을 경우)
-            if (focusElement.length > 0) {
-                focusElement[popupDepth - 1].focus();
-                focusElement.splice((popupDepth - 1), 1);
-                popupDepth -= 1;
-                KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${popupDepth}']`);
+            // 클릭으로 팝업 활성화 했을 경우 포커스 이동 (저장된 _popupVariable.focusElement 값이 있을 경우)
+            if (_popupVariable.focusElement.length > 0) {
+                _popupVariable.focusElement[_popupVariable.popupDepth - 1].focus();
+                _popupVariable.focusElement.splice((_popupVariable.popupDepth - 1), 1);
+                _popupVariable.popupDepth -= 1;
+                _popupVariable.KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${_popupVariable.popupDepth}']`);
             };
             
-            // 화면 시작 시 오픈 되는 팝업 등 케이스 (저장된 focusElement 값이 없을 경우)
+            // 화면 시작 시 오픈 되는 팝업 등 케이스 (저장된 _popupVariable.focusElement 값이 없을 경우)
             if (popupElement.getAttribute('data-popup-auto') === 'true') {
                 const $thisPopupDepth = popupElement.getAttribute('data-popup-depth');
                 if ($thisPopupDepth > 1) {
                     const prevPopupElement = document.querySelector(`[data-popup-depth='${$thisPopupDepth - 1}']`);
                     prevPopupElement.querySelector(`.${popupOption.titleClassName}`).focus();
-                    KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${$thisPopupDepth - 1}']`);
+                    _popupVariable.KeyboardEventElement = document.querySelector(`.${popupOption.wrapperClassName}[data-popup-depth='${$thisPopupDepth - 1}']`);
                 } else {
                     document.body.setAttribute('tabindex', '0');
                     document.body.focus();
@@ -209,7 +217,7 @@ let popupCommon = function() {
             } else if (openPopups.length > 0) {
                 // 팝업 opacity style 삭제 이벤트 호출 (dimmed 옵션 true 일 경우 동작, default : true)
                 if (popupOption.dimmed) {
-                    if (trigger === 'escKey') optionEvent.prevPopupStyleDelete(KeyboardEventElement, 'escKey');
+                    if (trigger === 'escKey') optionEvent.prevPopupStyleDelete(_popupVariable.KeyboardEventElement, 'escKey');
                     else optionEvent.prevPopupStyleDelete(e.currentTarget, 'button');
                 }
             };
@@ -225,7 +233,7 @@ let popupCommon = function() {
         // 팝업 close 버튼에서  tab 키 또는 화살표 -> 키 키보드 동작 시 팝업 타이틀로 포커스 이동 (팝업 밖으로 포커스 이동 방지)
         closeBtnKeydown: (e) => {
             if (e.key == 'Tab' || e.key == 'ArrowRight') {
-                layerPopups.forEach((layerPopup) => {
+                _popupVariable.layerPopups.forEach((layerPopup) => {
                     if (layerPopup.getAttribute('data-popup') === e.target.getAttribute('data-popup-close')) {
                         e.preventDefault();
                         layerPopup.querySelector(`.${popupOption.titleClassName}`).focus();
@@ -235,13 +243,13 @@ let popupCommon = function() {
         },
         // 팝업 포커스 관련 data reset
         popupDataReset: () => {
-            focusElement = [];
-            popupDepth = 0;
+            _popupVariable.focusElement = [];
+            _popupVariable.popupDepth = 0;
         },
         // 모든 팝업 닫기
         popupCloseAll: () => {
-            for (let i = 0; layerPopups.length > i; i++) layerPopups[i].classList.remove(popupOption.openClassName);
-            focusElement[0].focus();
+            for (let i = 0; _popupVariable.layerPopups.length > i; i++) _popupVariable.layerPopups[i].classList.remove(popupOption.openClassName);
+            _popupVariable.focusElement[0].focus();
         },
     };
 
@@ -249,14 +257,14 @@ let popupCommon = function() {
     let clickAction = {
         addClick: (e) => {
             // 팝업 호출 버튼
-            btnLayerPopup.forEach((btnLayerPopupOpen) => {
+            _popupVariable.btnLayerPopup.forEach((btnLayerPopupOpen) => {
                 btnLayerPopupOpen.addEventListener('click', clickEvent.popupOpen);
                 btnLayerPopupOpen.addEventListener('keydown', function (e) {
                     if (e.key == 'Enter') clickEvent.popupOpen(e);
                 });
             });
             // 팝업 닫기 버튼
-            btnLayerClose.forEach((btnLayerPopupClose) => {
+            _popupVariable.btnLayerClose.forEach((btnLayerPopupClose) => {
                 btnLayerPopupClose.addEventListener('click', clickEvent.popupClose);
                 // 팝업 마크업 기준 젤 하단에 들어가는 닫기 버튼 일 경우에만 키보드 포커스 제어
                 if (btnLayerPopupClose.classList.contains(`${popupOption.closeBtnClassName}`)) {
@@ -267,7 +275,7 @@ let popupCommon = function() {
             // 팝업 내 열린 상태에서 키보드 ESC 키 이벤트 실행 
             window.addEventListener('keydown', function (e) {
                 if (e.key == 'Escape' || e.key == 'Esc') {
-                    keyEscapeEvent = e;
+                    _popupVariable.keyEscapeEvent = e;
                     keyEvent.keyEscape = true;
                 };
             });
@@ -287,12 +295,12 @@ let popupCommon = function() {
     // 화면 시작 시 오픈 되는 팝업
     let startPopup = {
         init : () => {
-            autoPopups = document.querySelectorAll('[data-popup-auto="true"]'); // 화면 시작 시 자동으로 뜨는 팝업
-            autoPopups.forEach((autoPopup) => {
+            _popupVariable.autoPopups = document.querySelectorAll('[data-popup-auto="true"]'); // 화면 시작 시 자동으로 뜨는 팝업
+            _popupVariable.autoPopups.forEach((autoPopup) => {
                 // 쿠기 저장 된 값으로 오늘 하루 or 일주일 열지 않는 팝업 제외 후 시작 팝업 공통 이벤트 호출
-                if (cookieCheckValue.length > 0) {
-                    for (let i = 0; cookieCheckValue.length > i; i++) {
-                        if (autoPopups.length > 0 && autoPopup.getAttribute('data-popup') != cookieCheckValue[i]) startPopup.openStartPopup(autoPopup);
+                if (_popupVariable.cookieCheckValue.length > 0) {
+                    for (let i = 0; _popupVariable.cookieCheckValue.length > i; i++) {
+                        if (_popupVariable.autoPopups.length > 0 && autoPopup.getAttribute('data-popup') != _popupVariable.cookieCheckValue[i]) startPopup.openStartPopup(autoPopup);
                     };
                 }
                 else startPopup.openStartPopup(autoPopup);
@@ -301,20 +309,20 @@ let popupCommon = function() {
         // 시작 팝업 공통 이벤트
         openStartPopup: (autoPopup) => {
             if (popupOption.dimmed) optionEvent.createdDimmed(); // 팝업 dimmed 생성 (dimmed 옵션 true 일 경우 동작, default : true)
-            popupDepth += 1; // 팝업 depth 저장
+            _popupVariable.popupDepth += 1; // 팝업 depth 저장
             clickEvent.openCommonEvent(autoPopup); // 팝업 오픈 공통 이벤트 호출
             // 팝업 위 팝업이 뜰 경우 이전 팝업 opacity (dimmed 옵션 true 일 경우 동작, default : true)
-            if (popupOption.dimmed && popupDepth > 1) autoPopups[popupDepth - 2].classList.add(popupOption.dimmedPrevClassName);
+            if (popupOption.dimmed && _popupVariable.popupDepth > 1) _popupVariable.autoPopups[_popupVariable.popupDepth - 2].classList.add(popupOption.dimmedPrevClassName);
         },
         // 쿠키 값 확인
         getCookie: () => {
-            cookieData = document.cookie;
-            console.log(cookieData);
-            if (cookieData != '') {
-                let cookieArray = cookieData.split('; ');
+            _popupVariable.cookieData = document.cookie;
+            console.log(_popupVariable.cookieData);
+            if (_popupVariable.cookieData != '') {
+                let cookieArray = _popupVariable.cookieData.split('; ');
                 cookieArray.forEach((cookie) => {
                     let cookieName = cookie.split("=");
-                    if (cookieName[1] === "Y") cookieCheckValue.push(cookieName[0]);
+                    if (cookieName[1] === "Y") _popupVariable.cookieCheckValue.push(cookieName[0]);
                 });
             };
         },
