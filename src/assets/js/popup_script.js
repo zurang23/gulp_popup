@@ -39,9 +39,7 @@ const keyEvent = {
 };
 
 // IE 대응 forEach 변환
-if (window.NodeList && !NodeList.prototype.forEach) {
-    NodeList.prototype.forEach = Array.prototype.forEach;
-};
+if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
 
 let popupCommon = function() {
     let init = {
@@ -107,7 +105,6 @@ let popupCommon = function() {
                 popupDimmedTarget.parentNode.removeChild(popupDimmedTarget);
             });
             keyEvent.keyEscape = false;
-            // console.log();
         },
         // 팝업 open 시 body scroll Lock
         scrollLock: () => {
@@ -321,8 +318,8 @@ let popupCommon = function() {
             if (_popupVariable.cookieData != '') {
                 let cookieArray = _popupVariable.cookieData.split('; ');
                 cookieArray.forEach((cookie) => {
-                    let cookieName = cookie.split("=");
-                    if (cookieName[1] === "Y") _popupVariable.cookieCheckValue.push(cookieName[0]);
+                    let cookieName = cookie.split('=');
+                    if (cookieName[1] === 'Y') _popupVariable.cookieCheckValue.push(cookieName[0]);
                 });
             };
         },
@@ -349,8 +346,9 @@ let popupCommon = function() {
     return obj;
 }();
 
-// Load Event
+// Load Event 예시
 window.addEventListener('load', () => {
+    // 팝업 있는 페이지에서 load
     popupCommon.init();
     // 시작시 open 되는 팝업이 있을 경우에만 함수 사용
     popupCommon.getCookie();
