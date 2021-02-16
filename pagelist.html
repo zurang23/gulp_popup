@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title data-role="ui-title"></title>
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+	<style type="text/css">
+		*{box-sizing:border-box}
+		*:before,*:after{box-sizing:border-box}
+		*{margin:0;padding:0}
+		html{height:100%;margin:0;padding:0;font-family:'맑은 고딕','Malgun Gothic',sans-serif;}
+		body{margin:0;padding:0;height:100%;font-size:12px;color:#666;line-height:1.2;word-break:keep-all;-moz-text-size-adjust:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none; -ms-overflow-style: none; scrollbar-width: none; }
+        body::-webkit-scrollbar { display: none; }
+		label{vertical-align:middle}
+		address,em{font-style:normal}
+		strong,b,th{font-weight:500}
+		fieldset,img{border:0;vertical-align:middle}
+		caption,legend{width:1px;text-align:left;font-size:0;line-height:0;text-indent:-999em}
+		ul,ol,dl,dt,dd,li{list-style:none}
+		h1,h2,h3,h4,h5,h6{font-weight:bold;font-size:100%}
+		input,textarea,select{color:#666;letter-spacing:-1px;vertical-align:middle;-webkit-appearance:none;border-radius:0;border:0}
+		article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary{display:block}
+        div,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,form,iframe,fieldset,input,table,tr,th,td,button,textarea,select,thead,tbody,tfoot,pre,option{margin:0;padding:0;color:#666;}
+        table,tr,td,th,thead,tbody,tfoot{letter-spacing:-1px}
+		textarea{resize:none}
+		table{width:100%;border-spacing:0}
+		table th{border-collapse:collapse;*border-collapse:collapse}
+		table td{border-collapse:collapse}
+		button{border:none;background:none;cursor:pointer}
+		input,button,select,textarea{font-family:'맑은 고딕','Malgun Gothic',sans-serif;letter-spacing:-1px}
+		figcaption{position:absolute;overflow:hidden;width:0;height:0;font-size:0;line-height:0}
+		legend{visibility:hidden;overflow:hidden;width:0;height:0;font-size:0;line-height:0}
+		a{color:#666;text-decoration:none}
+		h5 {font-size: 14px;}
+		#g_header {position: relative;}
+		#g_header h1{height:60px;line-height:60px;padding-left:28px;margin-top:0;color:#fff;background:#15212D;font-size:28px;font-weight:500}
+		#g_header div a {display: block;height: 40px;font-size: 16px;line-height: 40px;color: #fff;}
+		#container{padding:0 30px 80px}
+		#container .contents{overflow:hidden;}
+		#container .contents:after{content:"";clear:both;display:block}
+		.guide-summary{margin-bottom:30px}
+		.guide-summary h3{margin:30px 0 10px;padding-bottom:5px;font-size:18px;border-bottom:1px solid #000}
+		.guide-summary h4{margin:20px 0 10px;font-size:14px}
+		.guide-summary ul + ul{margin-top:20px}
+		.guide-summary ul li{line-height:22px}
+		.guide-summary p{line-height:22px}
+		.guide-table{width:100%;border:1px solid #dadada}
+		.guide-table thead th{background:#f1f1f1;border-bottom:1px solid #999;padding:10px 0;border-left:1px solid #dadada;font-size:14px;font-weight:bold}
+		.guide-table tbody td{padding:5px;border-left:1px solid #dadada;font-size:14px;}
+		.guide-table thead tr th:first-child, .guide-table tbody tr td:first-child { border-left: 0; }
+		.guide-table tbody tr.check {background:#FFE793;}
+		.guide-table tbody tr.complete {background:#c0ffee;}
+		.guide-table tbody tr.complete td.state {color: red}
+		.guide-table tbody tr.delete {background:#aaa; text-decoration: line-through}
+		.guide-table tbody tr.delete td {color: #666 !important;}
+		.guide-table tbody tr.delete td. a{color: #666;}
+		.guide-table tbody tr.ing {font-weight: bold;}
+		.guide-table tbody tr td:last-child a {color: blue;}
+		.guide-table tbody tr + tr td{border-top:1px solid #dadada}
+		.guide-table tbody td.no{text-align:center}
+		.guide-table tbody td.date{text-align:center}
+		.guide-table tbody td.state{text-align:center;}
+		.guide-table tbody td.left{text-align:left}
+		.guide-table tbody td.filelink{text-align:left}
+		.guide-table tbody td.filelink a{text-decoration:none;color:blue}
+		.guide-table tbody tr td:last-child { white-space: pre-line; }
+		.progress-bar{ background: linear-gradient(to bottom, #d5d5d5, #e4e4e4);border-radius: 20px;height:20px;width:600px;position: relative; margin-top: 10px;}
+		.progress-bar .txt{position:absolute;left:0;right:0;text-align:center;top: -18px;font-weight:bold; z-index: 10;}
+		.progress-bar .bar{display:block;background: linear-gradient(to bottom, #4db2dc 50%, #369dc8 50%);border-radius: 20px;height:100%;line-height:20px;color:#000;text-align:center;position:absolute;top:0;left:0;z-index:1;}
+		.page_progress_txt{font-size:14px;}
+		.page_progress_txt li{float:left;margin-left:10px;}
+		.column-2{width:600px;overflow:hidden;}
+		.column-2 h4{float:left;}
+		.column-2 .page_progress_txt{float:right;margin:20px 2px 10px 0;}
+
+		.dimmed { display: inline-block; position: relative }
+		.dimmed:before { position: absolute; content: ''; display: block; left: 0; top: 0; height: 100%; width: 100%; z-index: 1; }
+		.guide-table tbody td.filelink .dimmed a { text-decoration: none; color: #333 }
+
+		.wrap-tab ul:after {display: block;content: ''; clear: both}
+        /* 텝 갯수에 따라 width 조정 필요 */
+		.wrap-tab ul li {display: block; float: left; width: 20%; box-sizing: border-box; height: 40px;background: #eee; font-size: 15px; text-align: center; line-height: 40px; }
+		.wrap-tab ul li a {display: block;}
+		.wrap-tab ul li.active { background: none; position: relative; font-weight: bold; }
+		.wrap-tab ul li.active:after { display: block; content: ''; width: 100%; position: absolute; top: 0; height: 3px; background: #0f2d56; }
+		.tab-content {display: none; padding-top: 30px;}
+		.tab-content.active {display: block}
+
+		.web ul {padding-top: 10px;}
+		.web ul li {padding: 10px 0; padding-left: 12px; border-bottom: 1px solid #ddd;}
+		.web ul li ul li{border-bottom: 0;}
+
+		.path-desc {margin-top: 30px; padding-top: 30px; border-top: 1px solid #ddd;}
+		.path-desc:first-child {border-top: 0; padding-top: 0;}
+		.path-desc h5 {padding-bottom: 10px;}
+		.path-desc > ul li dl {padding: 10px 0; padding-left: 6px; }
+		.path-desc > ul li ul li {padding-left: 12px;}
+		.path-desc > ul li ul li dl {padding: 5px 0; padding-left: 6px; }
+		.path-desc > ul li ul li dl:first-child {padding-top: 0;}
+		.path-desc > ul li ul li dl:last-child {padding-bottom: 10px;}
+		.path-desc > ul li ul li{border-bottom: 0;}
+		.path-desc dl dt, .path-desc dl dd {display: inline-block;}
+		.path-desc dl:before {display: inline-block; content: '-';}
+		.path-desc dl dt {font-weight: bold; padding-right: 5px;}
+		.path-desc dl dt:after {display: inline-block; content: ':'; padding-left: 5px;}
+        .link { text-decoration: underline; color: blue; }
+        
+        .cmd-code { display: block !important; background: #23241f; color: #f8f8f2; margin: 10px 0; padding: 10px 20px; }
+        
+        #tree { padding-top: 10px; }
+        #tree > ul li span { display: inline-block; position: relative; margin-left: 10px; padding: 3px 5px 4px; border: 1px solid #ccc; line-height: 1; border-radius: 3px; font-size: 11px; }
+        #tree > ul li span:before { content: ''; display: block; position: absolute; width: 8px; height: 1px; background-color: #ccc; left: -9px; top: 50% }
+        .jstree-default .jstree-anchor { line-height: 28px; height: 28px; }
+        @media (max-width: 1000px) {
+            #container {padding: 10px 10px 80px;}
+            #g_header h1 {height: auto; line-height: 1.4; padding: 15px;}
+            .progress-bar {width: 100%;}
+            /* 모바일 모드에서 보일 텝 갯수에 따라 width 수정 */
+            .wrap-tab ul li {width: 33.333%;}
+            /* 모바일 모드에서 숨길 텝 */
+            .wrap-tab ul li:nth-last-child(1), .wrap-tab ul li:nth-last-child(2) {display: none;}
+            /* 모바일 모드에서 테이블 인라인으로 설정 */
+            .guide-table {display: block;}
+            .guide-table thead {display: none;}
+            .guide-table tr {display: block;}
+            .guide-table tr th, .guide-table tr td {display: inline-block;}
+            .guide-table tbody td {border: 0;}
+            .guide-table tbody tr + tr td {border: 0;}
+            .guide-table tbody tr + tr {border-top: 1px solid #dadada}
+            /* 모바일 모드에서 숨길 값 설정 */
+            .guide-table tbody tr td:nth-last-child(1), .guide-table tbody tr td:nth-last-child(3), .guide-table tbody tr td:nth-child(5) {display: none;}
+        }
+	</style>
+</head>
+<body>
+<div id="g_header">
+	<h1 data-role="ui-title"></h1>
+</div>
+<div id="container">
+	<div class="contents">
+		<div class="guide-summary">
+			<h3>브라우저 지원 범위 및 퍼블리싱 참고사항</h3>
+			<h4>PC</h4>
+			<ul>
+				<li><strong>Chrome</strong></li>
+				<li>1920 * 1080 기준 적응형 (1920 이하 가로 스크롤)</li>
+			</ul>
+			<h4>MOBILE</h4>
+			<ul>
+				<li><strong>Android</strong> : 마시멜로(6.0)이상 최신 OS</li>
+			</ul>
+			<h4>문서타입 및 인코딩</h4>
+			<p class="box-code">&lt;!DOCTYPE html&gt;<br>&lt;meta charset="utf-8"&gt;</p>
+			<div class="column-2">
+				<h4>진행률</h4>
+				<div class="page_progress_txt" id="pageProgressInfo">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="progress-bar" id="progressBar">
+				<span class="txt"></span>
+				<span class="bar"></span>
+			</div>
+		</div>
+		<div class="wrap-tab">
+			<ul>
+				<li data-role="tab1">
+					<a href="javascript:;">PC 페이지 리스트</a>
+				</li>
+				<li data-role="tab2">
+					<a href="javascript:;">Mobile 페이지 리스트</a>
+				</li>
+				<li data-role="tab3">
+					<a href="javascript:;">Admin 페이지 리스트</a>
+				</li>
+				<li data-role="tab4">
+					<a href="javascript:;">폴더 구조도</a>
+				</li>
+				<li data-role="tab5">
+					<a href="javascript:;">라이브러리 & Gulp 환경 사용 설명</a>
+				</li>
+			</ul>
+		</div>
+		<div class="tab-content" data-role="tab1">
+		</div>
+		<div class="tab-content" data-role="tab2">
+		</div>
+		<div class="tab-content" data-role="tab3">
+		</div>
+		<div class="tab-content" data-role="tab4">
+			<div class="path-desc">
+				<h5>폴더 구조 및 설명</h5>
+                <div id="tree">
+                    <ul>
+                        <li data-jstree='{"opened" : true }'>assets <span>resource</span>
+                            <ul>
+                                <li data-jstree='{"opened" : true }'>fonts <span>Web font</span>
+                                    <ul>
+                                        <li data-jstree='{"opened" : true }'>NotoSansKR <span>NotoSans font</span></li>
+                                    </ul>
+                                </li>
+                                <li data-jstree='{"opened" : true }'>images <span>image resource</span>
+                                    <ul>
+                                        <li data-jstree='{"opened" : true }'>icon <span>icon resource</span></li>
+                                        <li data-jstree='{"opened" : true }'>img <span>image resource</span></li>
+                                    </ul>
+                                </li>
+                                <li data-jstree='{"opened" : true }'>js <span>script file</span>
+                                    <ul>
+                                        <li data-jstree='{"opened" : true }'>library <span>library js</span></li>
+                                        <li data-jstree='{"opened" : true }'>lottie <span>lottie json</span></li>
+                                    </ul>
+                                </li>
+                                <li data-jstree='{"opened" : true }'>scss <span>SASS file</span>
+                                    <ul>
+                                        <li data-jstree='{"opened" : true }'>base <span>reset, font scss</span></li>
+                                        <li data-jstree='{"opened" : true }'>components <span>공통 component scss</span></li>
+                                        <li data-jstree='{"opened" : true }'>layout <span>layout scss</span></li>
+                                        <li data-jstree='{"opened" : true }'>pages <span>page scss</span></li>
+                                        <li data-jstree='{"opened" : true }'>utils <span>변수, mixin scss</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li data-jstree='{"opened" : true }'>html <span>HTML 페이지</span>
+                            <ul>
+                                <li data-jstree='{"opened" : true }'>guide <span>공통 guide 파일</span></li>
+                                <li data-jstree='{"opened" : true }'>include <span>공통 include 파일</span></li>
+                                <li data-jstree='{"opened" : true }'>pages <span>html page 파일</span></li>
+                                <li data-jstree='{"opened" : true }'>popup <span>html window popup 파일</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+		</div>
+		<div class="tab-content" data-role="tab5">
+			<div class="path-desc">
+				<h5>사용 라이브러리 PC</h5>
+				<ul>
+					<li>
+						<dl>
+							<dt>bodymovin</dt>
+							<dd>lottie 파일 animation 라이브러리 (<a href="https://github.com/airbnb/lottie-web" target="_blank" class="link">https://github.com/airbnb/lottie-web</a>)</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+							<dt>choices</dt>
+							<dd>select 커스텀 라이브러리 (<a href="https://github.com/jshjohnson/Choices" target="_blank" class="link">https://github.com/jshjohnson/Choices</a>)</dd>
+						</dl>
+					</li>
+                    <li>
+                        <dl>
+                            <dt>draggable - Sortable, Swappable</dt>
+                            <dd>drag&drop Sortable, Swappable 라이브러리 (<a href="https://github.com/Shopify/draggable" target="_blank" class="link">https://github.com/Shopify/draggable</a>)</dd>
+                        </dl>
+                    </li>
+					<li>
+						<dl>
+							<dt>flatpickr</dt>
+							<dd>datepicker 커스텀 라이브러리 (<a href="https://github.com/flatpickr/flatpickr" target="_blank" class="link">https://github.com/flatpickr/flatpickr</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>flatpickr + ko</dt>
+							<dd>datepicker 커스텀 라이브러리(한글 지원버전) (<a href="https://github.com/flatpickr/flatpickr/tree/master/src/l10n" target="_blank" class="link">https://github.com/flatpickr/flatpickr/tree/master/src/l10n</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>range-slider</dt>
+							<dd>input range 커스텀 라이브러리 (<a href="https://github.com/Stryzhevskyi/rangeSlider" target="_blank" class="link">https://github.com/Stryzhevskyi/rangeSlider</a>)</dd>
+						</dl>
+					</li>
+                </ul>
+            </div>
+			<div class="path-desc">
+				<h5>사용 라이브러리 Mobile</h5>
+				<ul>
+					<li>
+						<dl>
+							<dt>bodymovin</dt>
+							<dd>lottie 파일 animation 라이브러리 (<a href="https://github.com/airbnb/lottie-web" target="_blank" class="link">https://github.com/airbnb/lottie-web</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>flatpickr</dt>
+							<dd>datepicker 커스텀 라이브러리 (<a href="https://github.com/flatpickr/flatpickr" target="_blank" class="link">https://github.com/flatpickr/flatpickr</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>flatpickr + ko</dt>
+							<dd>datepicker 커스텀 라이브러리(한글 지원버전) (<a href="https://github.com/flatpickr/flatpickr/tree/master/src/l10n" target="_blank" class="link">https://github.com/flatpickr/flatpickr/tree/master/src/l10n</a>)</dd>
+						</dl>
+					</li>
+                </ul>
+            </div>
+			<div class="path-desc">
+				<h5>사용 라이브러리 Admin</h5>
+				<ul>
+					<li>
+						<dl>
+							<dt>bodymovin</dt>
+							<dd>lottie 파일 animation 라이브러리 (<a href="https://github.com/airbnb/lottie-web" target="_blank" class="link">https://github.com/airbnb/lottie-web</a>)</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+							<dt>choices</dt>
+							<dd>select 커스텀 라이브러리 (<a href="https://github.com/jshjohnson/Choices" target="_blank" class="link">https://github.com/jshjohnson/Choices</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>draggable - Sortable</dt>
+							<dd>drag&drop Sortable 라이브러리 (<a href="https://github.com/Shopify/draggable" target="_blank" class="link">https://github.com/Shopify/draggable</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>flatpickr</dt>
+							<dd>datepicker 커스텀 라이브러리 (<a href="https://github.com/flatpickr/flatpickr" target="_blank" class="link">https://github.com/flatpickr/flatpickr</a>)</dd>
+						</dl>
+					</li>
+					<li>
+						<dl>
+							<dt>flatpickr + ko</dt>
+							<dd>datepicker 커스텀 라이브러리(한글 지원버전) (<a href="https://github.com/flatpickr/flatpickr/tree/master/src/l10n" target="_blank" class="link">https://github.com/flatpickr/flatpickr/tree/master/src/l10n</a>)</dd>
+						</dl>
+					</li>
+                </ul>
+            </div>
+			<div class="path-desc">
+				<h5>Gulp 환경 사용 설명</h5>
+				<ul>
+					<li>
+						<dl>
+							<dt>1. gulp 사용을 위해서 node 설치 필요</dt>
+							<dd>LTS 안정된 버전으로 설치 (<a href="https://nodejs.org/ko/" target="_blank" class="link">https://nodejs.org/ko/</a>)</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+                            <dt>2-1. node 설치 후 gulp 글로벌 설치</dt>
+                            <dd class="cmd-code">npm install --global gulp-cli</dd>
+                            <dt>- 2-2. gulp 로컬 설치</dt>
+                            <dd class="cmd-code">npm install --save-dev gulp</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+                            <dt>3. gulp 설치 후 각 프로젝트 폴더에서 npm install</dt>
+                            <dd class="cmd-code">cd PC<br/>npm install</dd>
+                            <dd class="cmd-code">cd MO<br/>npm install</dd>
+                            <dd class="cmd-code">cd Admin<br/>npm install</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+                            <dt>4. 실행은 각 폴더에서 gulp 명령어로 실행</dt>
+                            <dd class="cmd-code">gulp</dd>
+						</dl>
+                    </li>
+					<li>
+						<dl>
+                            <dt style="color: red">gulp 사용이 불편하시다면 빌드된 파일도 함께 드리니 빌드된 파일을 보셔도 상관없습니다</dt>
+                            <dd>다만, scss로 작업된 파일을 컴파일한 css라 라이브러리를 제외한 대부분의 css는 모두 main.css 한 파일로 컴파일 되어있습니다.
+                                참고 부탁드립니다.</dd>
+						</dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.js?features=fetch"></script>
+
+<script>
+    // var values = Object.keys(parameters).map(function(i) { return parameters[i]; });
+    var pageData = {},
+    pcUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=PC',
+    moUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=Mobile',
+    adminUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=PC_Admin';
+
+    var baseURL = "/build/html";
+    
+    var getGoggleSheet = {
+
+        // 변수에 json data 넣을때 사용 !
+        // getListData: function(url, type) {
+        //     var app = new App();
+        // },
+
+        getListData: function(url, type) {                                                             
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                }
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function(data) {
+                // json 출력
+                if (type === 'PC') {
+                    pageData.PC = data.data;
+                } else if (type === "MO") {
+                    pageData.MO = data.data
+                } else {
+                    pageData.Admin = data.data
+                }
+                var app = new App();
+            })
+            .catch(function(err) {
+                console.log('Fetch Error', err);
+            });
+        },
+        // 구글 시트에서 날짜 형식으로 받은 날짜 텍스트 변환
+        changeDate: function(date) {
+            if (date != 'Invalid Date') {
+                var month = (1 + date.getMonth());
+                month = month >= 10 ? month : '0' + month;
+                var day = date.getDate();
+                day = day >= 10 ? day : '0' + day;
+                return  month + '/' + day;
+            } else {
+                return '';
+            }
+        },
+        // 현재 상태 값에 따른 클래스명 return
+        checkComplete: function(state) {
+            if (state === '화면 삭제') { // 중복 또는 제외 할 화면이 있을 경우  || 로 추가
+                return 'delete'
+            } else if (state === '진행중') {
+                return 'ing'
+            } else if (state === '완료') {
+                return 'complete'
+            } else if (state === '검수요청') {
+                return 'check'
+            } else {
+                return '';
+            }
+        },
+    }
+
+	var data = {};
+	data.title = 'U+뷰라이브 UX';
+	data.tabActive = 'tab1';
+	data.list = [
+		{ type: 'PC' },
+        { type: 'MO' },
+        { type: 'Admin' },
+	];
+
+    var tabMenu = '';
+	var tabContent = '';
+	
+	$.each(data.list, function(idx, value) {
+		tabContent += '	<div class="this-list-view">';
+		tabContent += '		<form name="work" action="">';
+		tabContent += '			<table class="guide-table">';
+		tabContent += '				<caption></caption>';
+		tabContent += '				<colgroup>';
+		tabContent += '					<col style="width: 3%;">';
+		tabContent += '					<col style="width: 10%;">';
+		tabContent += '					<col style="width: 20%;">';
+		tabContent += '					<col style="width: 10%;">';
+		tabContent += '					<col style="width: 7%;">';
+		tabContent += '					<col style="width: 7%;">';
+		tabContent += '					<col>';
+		tabContent += '				</colgroup>';
+		tabContent += '				<thead>';
+		tabContent += '					<tr>';
+		tabContent += '						<th scope="col">INDEX</th>';
+		tabContent += '						<th scope="col">1Depth</th>';
+		tabContent += '						<th scope="col">2Depth</th>';
+		tabContent += '						<th scope="col">File Name</th>';
+		tabContent += '						<th scope="col">완료여부</th>';
+		tabContent += '						<th scope="col">퍼블 완료일</th>';
+		tabContent += '						<th scope="col">작업내용 / 참고내용</th>';
+		tabContent += '					</tr>';
+		tabContent += '				</thead>';
+		tabContent += '				<tbody data-role="ui-list">';
+		tabContent += '				</tbody>';
+		tabContent += '			</table>';
+		tabContent += '		</form>';
+		tabContent += '	</div>';
+
+        $(".tab-content[data-role='tab"+ (idx+1) +"']").append(tabContent);
+        tabContent = '';
+	});
+
+	function App() {
+		var _this = self;
+        var dataLength = 0; 
+
+		_this.env = {
+			eleTitle: $('*[data-role=ui-title]'),
+			eleList: $('*[data-role=ui-list]')
+		};
+
+		_this.setTitle = function() {
+			_this.env.eleTitle.text(data.title);
+		};
+
+		_this.setList = function() {
+			var html = '';
+            // 각 시트 반복
+			$.each(data.list, function(idx, value) {
+                // 엑셀 행 값 반복
+                var listIdx = 0;
+                var target = $('.tab-content').eq(idx).find('tbody');
+                target.text('');
+                if (pageData[value.type] !== undefined) {
+                    for(i = 0; i < pageData[value.type].length; i++) {
+                        // IE 가 Object.values 를 지원하지 않아 아래와 같이 IE 대응 코드로 수정
+                        // var $forTarget = Object.values(pageData[value.type][i]);
+                        var $forTarget = Object.keys(pageData[value.type][i]).map(function (rowValue) {
+                            return pageData[value.type][i][rowValue];
+                        });
+                        // A열부터 0, B = 1, C = 2 .... 순차적으로 숫자 올라감
+                        listIdx += 1;
+                        html += '<tr class="' + getGoggleSheet.checkComplete($forTarget[11])+ '">';
+                        html += '<td class="no">' + listIdx + '</td>';
+                        html += '<td>' + $forTarget[1] + '</td>';
+                        html += '<td>' + $forTarget[2] + '</td>';
+                        // html += '<td class="date">' + getGoggleSheet.changeDate(new Date($forTarget[6])) + '</td>';
+                        // html += '<td class="date">' + getGoggleSheet.changeDate(new Date($forTarget[8])) + '</td>';
+                        html += '<td class="filelink"><a href="' + data.list[idx].type + baseURL + $forTarget[10] + '" target="_blank">'+ $forTarget[10] +'</a></td>';
+                        html += '<td class="state">' + $forTarget[11] + '</td>';
+                        html += '<td class="date">' + getGoggleSheet.changeDate(new Date($forTarget[12])) + '</td>';
+                        html += '<td>' + $forTarget[13] + '</td>';
+                        html += '</tr>';
+    
+                        target.append(html);
+                        html = '';
+                    };
+                }
+                dataLength += listIdx;
+			});
+
+			_this.env.eleList.show();
+		};
+
+		_this.setProgress = function() {
+			var completeCnt = 0;
+            var ingCnt = 0;
+            var totalCnt = 0;
+            var exceptCnt = 0; // 중복 또는 제외 할 화면이 있을 경우
+			$.each(data.list, function(idx, value) {
+                if (pageData[value.type] !== undefined) {
+                    for(i = 0; i < pageData[value.type].length; i++) {
+                        // 화면 상태 열
+                        var $forTarget = Object.keys(pageData[value.type][i]).map(function (rowValue) {
+                            return pageData[value.type][i][rowValue];
+                        });
+                        $forTarget = $forTarget[11];
+                        if ($forTarget === '완료' || $forTarget === '화면 삭제') {
+                            completeCnt += 1;
+                        } else if ($forTarget === '진행중' || $forTarget === '검수요청') {
+                            ingCnt += 1;
+                        }
+                        // 중복 또는 제외 할 화면이 있을 경우
+                        else if ($forTarget === '네이티브 화면 제외') {
+                            exceptCnt += 1;
+                        }
+                    }
+
+                }
+			});
+            totalCnt = dataLength - exceptCnt;
+			var percent = (completeCnt / totalCnt * 100).toFixed(1);
+			$("#progressBar .txt").html(percent + '%');
+			$("#progressBar .bar").css('width', percent + '%');
+
+			var progressTxt = '';
+			progressTxt += '<li><strong>전체 : </strong>' + totalCnt + '</li>';
+			progressTxt += '<li><strong>완료 : </strong>' + completeCnt + '</li>';
+			progressTxt += '<li><strong>진행중 : </strong>' + ingCnt + '</li>';
+			$("#pageProgressInfo ul").html(progressTxt);
+		};
+
+		_this.tab = function() {
+			$('.wrap-tab li[data-role='+ data.tabActive +'], .tab-content[data-role='+ data.tabActive +']').addClass('active');
+			$('.wrap-tab a').on('click', function() {
+				var _$this = $(this);
+				var activeTab = _$this.parent().attr('data-role');
+				_$this.parent().addClass('active').siblings().removeClass('active');
+				$('.tab-content[data-role='+ activeTab +']').addClass('active').siblings().removeClass('active');
+			});
+        };
+
+		_this.init = function() {
+            _this.setTitle();
+            _this.setList();
+            _this.setProgress();
+            _this.tab();
+            $('#tree').jstree();
+		}();
+	};
+
+    window.addEventListener('load', function() {
+        getGoggleSheet.getListData(pcUrl, 'PC');
+        getGoggleSheet.getListData(moUrl, 'MO');
+        getGoggleSheet.getListData(adminUrl, 'Admin');
+    });
+</script>
+</body>
+</html>
