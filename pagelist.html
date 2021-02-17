@@ -6,6 +6,7 @@
 	<title data-role="ui-title"></title>
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
 	<style type="text/css">
+        /* reset.css */
 		*{box-sizing:border-box}
 		*:before,*:after{box-sizing:border-box}
 		*{margin:0;padding:0}
@@ -33,23 +34,22 @@
 		legend{visibility:hidden;overflow:hidden;width:0;height:0;font-size:0;line-height:0}
 		a{color:#666;text-decoration:none}
 		h5 {font-size: 14px;}
-		#g_header {position: relative;}
+        
 		#g_header h1{height:60px;line-height:60px;padding-left:28px;margin-top:0;color:#fff;background:#15212D;font-size:28px;font-weight:500}
-		#g_header div a {display: block;height: 40px;font-size: 16px;line-height: 40px;color: #fff;}
-		#container{padding:0 30px 80px}
-		#container .contents{overflow:hidden;}
+		#container{padding:0 30px 30px}
 		#container .contents:after{content:"";clear:both;display:block}
 		.guide-summary{margin-bottom:30px}
-		.guide-summary h3{margin:30px 0 10px;padding-bottom:5px;font-size:18px;border-bottom:1px solid #000}
-		.guide-summary h4{margin:20px 0 10px;font-size:14px}
+		.guide-summary h2{margin:30px 0 10px;padding-bottom:5px;font-size:18px;border-bottom:1px solid #000}
+		.guide-summary h3{margin:20px 0 10px;font-size:14px}
 		.guide-summary ul + ul{margin-top:20px}
 		.guide-summary ul li{line-height:22px}
 		.guide-summary p{line-height:22px}
+
 		.guide-table{width:100%;border:1px solid #dadada}
 		.guide-table thead th{background:#f1f1f1;border-bottom:1px solid #999;padding:10px 0;border-left:1px solid #dadada;font-size:14px;font-weight:bold}
 		.guide-table tbody td{padding:5px;border-left:1px solid #dadada;font-size:14px;}
 		.guide-table thead tr th:first-child, .guide-table tbody tr td:first-child { border-left: 0; }
-		.guide-table tbody tr.check {background:#FFE793;}
+		.guide-table tbody tr.confirm {background:#FFE793;}
 		.guide-table tbody tr.complete {background:#c0ffee;}
 		.guide-table tbody tr.complete td.state {color: red}
 		.guide-table tbody tr.delete {background:#aaa; text-decoration: line-through}
@@ -59,7 +59,8 @@
 		.guide-table tbody tr td:last-child a {color: blue;}
 		.guide-table tbody tr + tr td{border-top:1px solid #dadada}
 		.guide-table tbody td.no{text-align:center}
-		.guide-table tbody td.date{text-align:center}
+		.guide-table tbody td.date, .guide-table tbody td.update{text-align:center}
+		.guide-table tbody tr.update td.desc::before{display: inline-block; content: 'update'; background-color: darkorange; border-radius: 10px; padding: 2px 8px 4px; color: #fff; font-weight: 700; margin-right: 5px;}
 		.guide-table tbody td.state{text-align:center;}
 		.guide-table tbody td.left{text-align:left}
 		.guide-table tbody td.filelink{text-align:left}
@@ -112,9 +113,12 @@
         #tree > ul li span { display: inline-block; position: relative; margin-left: 10px; padding: 3px 5px 4px; border: 1px solid #ccc; line-height: 1; border-radius: 3px; font-size: 11px; }
         #tree > ul li span:before { content: ''; display: block; position: absolute; width: 8px; height: 1px; background-color: #ccc; left: -9px; top: 50% }
         .jstree-default .jstree-anchor { line-height: 28px; height: 28px; }
+
         @media (max-width: 1000px) {
             #container {padding: 10px 10px 80px;}
             #g_header h1 {height: auto; line-height: 1.4; padding: 15px;}
+            .column-2{display: flex; justify-content: space-between; width:100%; padding-bottom: 10px;}
+            .column-2 .page_progress_txt {float: initial; margin: 20px 0 10px;}
             .progress-bar {width: 100%;}
             /* 모바일 모드에서 보일 텝 갯수에 따라 width 수정 */
             .wrap-tab ul li {width: 33.333%;}
@@ -127,6 +131,8 @@
             .guide-table tr th, .guide-table tr td {display: inline-block;}
             .guide-table tbody td {border: 0;}
             .guide-table tbody tr + tr td {border: 0;}
+            .guide-table tbody tr td:not(.no) + td::before {display: inline; content: '>'; padding-right: 5px;}
+            .guide-table tbody tr td.filelink::before, .guide-table tbody tr td.date::before, .guide-table tbody tr td.update::before {display: none !important;}
             .guide-table tbody tr + tr {border-top: 1px solid #dadada}
             /* 모바일 모드에서 숨길 값 설정 */
             .guide-table tbody tr td:nth-last-child(1), .guide-table tbody tr td:nth-last-child(3), .guide-table tbody tr td:nth-child(5) {display: none;}
@@ -140,20 +146,20 @@
 <div id="container">
 	<div class="contents">
 		<div class="guide-summary">
-			<h3>브라우저 지원 범위 및 퍼블리싱 참고사항</h3>
-			<h4>PC</h4>
+			<h2>브라우저 지원 범위 및 퍼블리싱 참고사항</h2>
+			<h3>PC</h3>
 			<ul>
 				<li><strong>Chrome</strong></li>
 				<li>1920 * 1080 기준 적응형 (1920 이하 가로 스크롤)</li>
 			</ul>
-			<h4>MOBILE</h4>
+			<h3>MOBILE</h3>
 			<ul>
 				<li><strong>Android</strong> : 마시멜로(6.0)이상 최신 OS</li>
 			</ul>
-			<h4>문서타입 및 인코딩</h4>
+			<h3>문서타입 및 인코딩</h3>
 			<p class="box-code">&lt;!DOCTYPE html&gt;<br>&lt;meta charset="utf-8"&gt;</p>
 			<div class="column-2">
-				<h4>진행률</h4>
+				<h3>진행률</h3>
 				<div class="page_progress_txt" id="pageProgressInfo">
 					<ul></ul>
 				</div>
@@ -166,13 +172,13 @@
 		<div class="wrap-tab">
 			<ul>
 				<li data-role="tab1">
-					<a href="javascript:;">PC 페이지 리스트</a>
+					<a href="javascript:;">PC</a>
 				</li>
 				<li data-role="tab2">
-					<a href="javascript:;">Mobile 페이지 리스트</a>
+					<a href="javascript:;">Mobile</a>
 				</li>
 				<li data-role="tab3">
-					<a href="javascript:;">Admin 페이지 리스트</a>
+					<a href="javascript:;">Admin</a>
 				</li>
 				<li data-role="tab4">
 					<a href="javascript:;">폴더 구조도</a>
@@ -384,14 +390,25 @@
 <script src="https://polyfill.io/v3/polyfill.js?features=fetch"></script>
 
 <script>
-    // var values = Object.keys(parameters).map(function(i) { return parameters[i]; });
     var pageData = {},
-    pcUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=PC',
-    moUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=Mobile',
-    adminUrl = 'https://script.google.com/macros/s/AKfycbxKJV9IiEloAXzkgcYGvVyVb6_MsKV0Jsf2dk1Qa3X1uyeLHzw/exec?sheetName=PC_Admin';
-
-    var baseURL = "/build/html";
+    pcUrl = 'https://script.google.com/macros/s/AKfycbwE2Wc2r4nwUGP7LNqSl28Ut7a0Uh5gLuN8QIvhLg/exec?sheetName=PC',
+    moUrl = 'https://script.google.com/macros/s/AKfycbwE2Wc2r4nwUGP7LNqSl28Ut7a0Uh5gLuN8QIvhLg/exec?sheetName=Mobile',
+    adminUrl = 'https://script.google.com/macros/s/AKfycbwE2Wc2r4nwUGP7LNqSl28Ut7a0Uh5gLuN8QIvhLg/exec?sheetName=PC_Admin',
     
+    baseURL = "/build/html",
+    
+    tabMenu = '',
+    tabContent = '',
+    
+    data = {};
+    data.title = '페이지리스트 샘플';
+    data.tabActive = 'tab1';
+    data.list = [
+        { type: 'PC' },
+        { type: 'MO' },
+        { type: 'Admin' },
+    ];
+
     var getGoggleSheet = {
 
         // 변수에 json data 넣을때 사용 !
@@ -411,13 +428,7 @@
             })
             .then(function(data) {
                 // json 출력
-                if (type === 'PC') {
-                    pageData.PC = data.data;
-                } else if (type === "MO") {
-                    pageData.MO = data.data
-                } else {
-                    pageData.Admin = data.data
-                }
+                pageData[type] = data.data;
                 var app = new App();
             })
             .catch(function(err) {
@@ -428,10 +439,22 @@
         changeDate: function(date) {
             if (date != 'Invalid Date') {
                 var month = (1 + date.getMonth());
-                month = month >= 10 ? month : '0' + month;
                 var day = date.getDate();
+                month = month >= 10 ? month : '0' + month;
                 day = day >= 10 ? day : '0' + day;
                 return  month + '/' + day;
+            } else {
+                return '';
+            }
+        },
+        // 완료 후 수정일 날짜 오늘 날짜와 비교 후 tr에 update class 추가
+        checkUpdate: function(date) {
+            var next3day = new Date();
+            var prev3day = new Date();
+            next3day.setDate(next3day.getDate() + 2);
+            prev3day.setDate(prev3day.getDate() - 2);
+            if (date != 'Invalid Date' && date > prev3day && next3day > date) {
+                return 'update';
             } else {
                 return '';
             }
@@ -445,55 +468,43 @@
             } else if (state === '완료') {
                 return 'complete'
             } else if (state === '검수요청') {
-                return 'check'
+                return 'confirm'
             } else {
                 return '';
             }
         },
     }
-
-	var data = {};
-	data.title = 'U+뷰라이브 UX';
-	data.tabActive = 'tab1';
-	data.list = [
-		{ type: 'PC' },
-        { type: 'MO' },
-        { type: 'Admin' },
-	];
-
-    var tabMenu = '';
-	var tabContent = '';
-	
+    
 	$.each(data.list, function(idx, value) {
-		tabContent += '	<div class="this-list-view">';
-		tabContent += '		<form name="work" action="">';
-		tabContent += '			<table class="guide-table">';
-		tabContent += '				<caption></caption>';
-		tabContent += '				<colgroup>';
-		tabContent += '					<col style="width: 3%;">';
-		tabContent += '					<col style="width: 10%;">';
-		tabContent += '					<col style="width: 20%;">';
-		tabContent += '					<col style="width: 10%;">';
-		tabContent += '					<col style="width: 7%;">';
-		tabContent += '					<col style="width: 7%;">';
-		tabContent += '					<col>';
-		tabContent += '				</colgroup>';
-		tabContent += '				<thead>';
-		tabContent += '					<tr>';
-		tabContent += '						<th scope="col">INDEX</th>';
-		tabContent += '						<th scope="col">1Depth</th>';
-		tabContent += '						<th scope="col">2Depth</th>';
-		tabContent += '						<th scope="col">File Name</th>';
-		tabContent += '						<th scope="col">완료여부</th>';
-		tabContent += '						<th scope="col">퍼블 완료일</th>';
-		tabContent += '						<th scope="col">작업내용 / 참고내용</th>';
-		tabContent += '					</tr>';
-		tabContent += '				</thead>';
-		tabContent += '				<tbody data-role="ui-list">';
-		tabContent += '				</tbody>';
-		tabContent += '			</table>';
-		tabContent += '		</form>';
-		tabContent += '	</div>';
+    tabContent += '	<div class="this-list-view">';
+    tabContent += '     <table class="guide-table">';
+    tabContent += '         <caption></caption>';
+    tabContent += '         <colgroup>';
+    tabContent += '             <col style="width: 3%;">';
+    tabContent += '             <col style="width: 10%;">';
+    tabContent += '             <col style="width: 20%;">';
+    tabContent += '             <col style="width: 10%;">';
+    tabContent += '             <col style="width: 7%;">';
+    tabContent += '             <col style="width: 7%;">';
+    tabContent += '             <col style="width: 7%;">';
+    tabContent += '             <col>';
+    tabContent += '         </colgroup>';
+    tabContent += '         <thead>';
+    tabContent += '             <tr>';
+    tabContent += '                 <th scope="col">INDEX</th>';
+    tabContent += '                 <th scope="col">1Depth</th>';
+    tabContent += '                 <th scope="col">2Depth</th>';
+    tabContent += '                 <th scope="col">File Name</th>';
+    tabContent += '                 <th scope="col">완료여부</th>';
+    tabContent += '                 <th scope="col">퍼블 완료일</th>';
+    tabContent += '                 <th scope="col">완료 후 수정일</th>';
+    tabContent += '                 <th scope="col">작업내용 / 참고내용</th>';
+    tabContent += '             </tr>';
+    tabContent += '         </thead>';
+    tabContent += '         <tbody data-role="ui-list">';
+    tabContent += '         </tbody>';
+    tabContent += '     </table>';
+    tabContent += '	</div>';
 
         $(".tab-content[data-role='tab"+ (idx+1) +"']").append(tabContent);
         tabContent = '';
@@ -529,7 +540,7 @@
                         });
                         // A열부터 0, B = 1, C = 2 .... 순차적으로 숫자 올라감
                         listIdx += 1;
-                        html += '<tr class="' + getGoggleSheet.checkComplete($forTarget[11])+ '">';
+                        html += '<tr class="' + getGoggleSheet.checkComplete($forTarget[11])+ ' '+ getGoggleSheet.checkUpdate(new Date($forTarget[12])) +'">';
                         html += '<td class="no">' + listIdx + '</td>';
                         html += '<td>' + $forTarget[1] + '</td>';
                         html += '<td>' + $forTarget[2] + '</td>';
@@ -538,7 +549,8 @@
                         html += '<td class="filelink"><a href="' + data.list[idx].type + baseURL + $forTarget[10] + '" target="_blank">'+ $forTarget[10] +'</a></td>';
                         html += '<td class="state">' + $forTarget[11] + '</td>';
                         html += '<td class="date">' + getGoggleSheet.changeDate(new Date($forTarget[12])) + '</td>';
-                        html += '<td>' + $forTarget[13] + '</td>';
+                        html += '<td class="update">' + getGoggleSheet.changeDate(new Date($forTarget[12])) + '</td>';
+                        html += '<td class="desc">' + $forTarget[13] + '</td>';
                         html += '</tr>';
     
                         target.append(html);
