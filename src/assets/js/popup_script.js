@@ -152,7 +152,10 @@ let popupCommon = function() {
             popupTitle.focus();
             // 팝업 타이틀에서 shift+tab 또는 <- 화살표 키 키보드 동작 시 이벤트 동작 중지 (팝업 밖으로 포커스 이동 방지)
             popupTitle.addEventListener('keydown', function (e) {
-                if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') e.preventDefault();
+                if ((e.key == 'Tab' && e.shiftKey) || e.key == 'ArrowLeft') {
+                    e.preventDefault();
+                    popupElement.querySelector(`.${popupOption.closeBtnClassName}`).focus();
+                };
             });
             _popupVariable.KeyboardEventElement = popupElement;
         },
@@ -229,7 +232,7 @@ let popupCommon = function() {
         },
         // 팝업 close 버튼에서  tab 키 또는 화살표 -> 키 키보드 동작 시 팝업 타이틀로 포커스 이동 (팝업 밖으로 포커스 이동 방지)
         closeBtnKeydown: (e) => {
-            if (e.key == 'Tab' || e.key == 'ArrowRight') {
+            if ((e.key == 'Tab' && !e.shiftKey) || e.key == 'ArrowRight') {
                 _popupVariable.layerPopups.forEach((layerPopup) => {
                     if (layerPopup.getAttribute('data-popup') === e.target.getAttribute('data-popup-close')) {
                         e.preventDefault();
