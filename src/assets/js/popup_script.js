@@ -13,7 +13,7 @@ const popupOption = {
 }; 
 
 // 팝업에 사용되는 전역 변수
-let _popupVariable = {};
+const _popupVariable = {};
 
 _popupVariable.focusElement = [];
 _popupVariable.cookieCheckValue = [];
@@ -41,7 +41,7 @@ const keyEvent = {
 // IE 대응 forEach 변환
 if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
 
-let popupCommon = function() {
+const popupCommon = function() {
     let init = {
         // 전역 변수 값 설정
         globalVariable: () => {
