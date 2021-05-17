@@ -1,4 +1,5 @@
 function ModalPopup(options) {
+    const _$this = this;
     // IE 대응 forEach 변환
     if (window.NodeList && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
 
@@ -66,27 +67,27 @@ function ModalPopup(options) {
             },
             // popupDimmedClickAction 실행시 실행되는 이벤트 (dimmed 삭제, 모든 팝업 닫기, 스크롤 락 해지, 포커스 이동, 포커스 data reset 이벤트 포함)
             popupDimmedCloseEvent: (event) => {
-                event.preventDefault();
-                optionEvent.dimmedeDelete(); // 팝업 dimmed 삭제 이벤트 호출
-                optionEvent.scrollLockRemove(); // 스크롤 락 해지 이벤트 호출
-                // 팝업 전체 닫기 이벤트 호출 기본 
-                // (저장 된 _popupVariable.focusElement 값이 있는 경우)
-                if (_popupVariable.focusElement.length > 0) clickEvent.popupCloseAll();
-                // (저장된 _popupVariable.focusElement 값이 없을 경우 - 화면 시작 시 오픈 되는 팝업 등 케이스)
-                else {
-                    for (let i = 0; _popupVariable.layerPopups.length > i; i++) _popupVariable.layerPopups[i].classList.remove(popupOptions.openClassName);
-                    document.body.setAttribute('tabindex', '0');
-                    document.body.focus();
-                };
-                clickEvent.popupDataReset(); // 팝업 포커스 data reset
+                if (event.target.classList.contains(`${popupOptions.wrapperClassName}`)) {
+                    event.preventDefault();
+                    optionEvent.dimmedeDelete(); // 팝업 dimmed 삭제 이벤트 호출
+                    optionEvent.scrollLockRemove(); // 스크롤 락 해지 이벤트 호출
+                    // 팝업 전체 닫기 이벤트 호출 기본 
+                    // (저장 된 _popupVariable.focusElement 값이 있는 경우)
+                    if (_popupVariable.focusElement.length > 0) clickEvent.popupCloseAll();
+                    // (저장된 _popupVariable.focusElement 값이 없을 경우 - 화면 시작 시 오픈 되는 팝업 등 케이스)
+                    else {
+                        for (let i = 0; _popupVariable.layerPopups.length > i; i++) _popupVariable.layerPopups[i].classList.remove(popupOptions.openClassName);
+                        document.body.setAttribute('tabindex', '0');
+                        document.body.focus();
+                    };
+                    clickEvent.popupDataReset(); // 팝업 포커스 data reset
+                    event.srcElement.removeEventListener('click', optionEvent.popupDimmedCloseEvent);
+                }
             },
             // 팝업 dimmed click Action
             popupDimmedClickAction: (element) => {
-                element.addEventListener('click', function(event) {
-                    // 팝업 dimmed 삭제시 실행되는 이벤트 popupDimmedCloseEvent 호출
-                    if (event.target === event.currentTarget) optionEvent.popupDimmedCloseEvent(event);
-                    this.removeEventListener("click",arguments.callee); // 이벤트 삭제
-                });
+                // 팝업 dimmed 삭제시 실행되는 이벤트 popupDimmedCloseEvent 호출
+                element.addEventListener('click', optionEvent.popupDimmedCloseEvent);
             },
             // 상위 팝업 닫기 시 이전 팝업 opacity style 삭제
             prevPopupStyleDelete: (target, trigger) => {
@@ -175,6 +176,7 @@ function ModalPopup(options) {
                         if (notOpenCheck != null && notOpenCheck.checked) {
                             if (notOpenCheck.getAttribute('data-check-open') === 'today') closeOption.setCookie(layerPopup.getAttribute('data-popup'), 'Y', 1);
                             else if (notOpenCheck.getAttribute('data-check-open') === 'week') closeOption.setCookie(layerPopup.getAttribute('data-popup'), 'Y', 7);
+                            else closeOption.setCookie(layerPopup.getAttribute('data-popup'), 'Y', Number(notOpenCheck.getAttribute('data-check-open')));
                         };
                         clickEvent.singleCloseCommonEvent(layerPopup, 'close'); // 단일 팝업 닫기 공통 이벤트 호출
                     };
@@ -301,7 +303,7 @@ function ModalPopup(options) {
             init : () => {
                 _popupVariable.autoPopups = document.querySelectorAll('[data-popup-auto="true"]'); // 화면 시작 시 자동으로 뜨는 팝업
                 _popupVariable.autoPopups.forEach((autoPopup) => {
-                    // 쿠기 저장 된 값으로 오늘 하루 or 일주일 열지 않는 팝업 제외 후 시작 팝업 공통 이벤트 호출
+                    // 쿠키 저장 된 값으로 오늘 하루 or 일주일 열지 않는 팝업 제외 후 시작 팝업 공통 이벤트 호출
                     if (_popupVariable.cookieCheckValue.length > 0) {
                         for (let i = 0; _popupVariable.cookieCheckValue.length > i; i++) {
                             if (_popupVariable.autoPopups.length > 0 && autoPopup.getAttribute('data-popup') != _popupVariable.cookieCheckValue[i]) startPopup.openStartPopup(autoPopup);
@@ -332,12 +334,12 @@ function ModalPopup(options) {
             },
         };
         
-        let obj = {
+        return {
             init: () => {
                 clickAction.addClick();
                 if (popupOptions.startPopup) {
-                    popupCommon.getCookie();
-                    popupCommon.startOption();
+                    startPopup.getCookie();
+                    // popupCommon.startOption();
                 };
             },
             setCookie: (name, value, expiredays) => {
@@ -353,7 +355,6 @@ function ModalPopup(options) {
                 clickEvent.escKeyClose(element, e);
             }
         };
-        return obj;
     }();
 
     popupCommon.init();
